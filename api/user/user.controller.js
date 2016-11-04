@@ -117,7 +117,7 @@ module.exports.login = (req, res) => {
     var password = req.body.password
     return User.findOne({loginId: loginId}).exec()
         .then(user => {
-            if(user.authenticate(password)) {
+            if(user&&user.authenticate(password)) {
                 let token = jwt.sign({_id: user._id}, config.secrets.session, {
                     expiresIn: 60 * 60 *5
                 })
