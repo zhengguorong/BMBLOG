@@ -3,6 +3,7 @@ var path = require('path')
 
 module.exports = function(app){
     app.use('/api/users', require('./api/user'));
+    app.use('/api/articles', require('./api/article'));
     app.use('/auth', require('./auth'))
     // 404错误处理
     app.route('/:url(api|auth|components|app|bower_components|assets)/*')

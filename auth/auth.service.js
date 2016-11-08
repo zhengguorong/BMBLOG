@@ -1,7 +1,7 @@
 /**
  * Created by zhengguorong on 16/11/2.
  * 用户权限认证方法
- * 
+ *
  *  * Q&A
  * 为什么要使用composable-middleware,为了解决什么问题?
  *     他的作用是合并两个中间件,让其不需要在挂在在express实例上,例如expressJwt中间件是在执行后操作req对象,在req对象
@@ -16,6 +16,7 @@ const expressJwt = require('express-jwt')
 const config = require('../config')
 const compose = require('composable-middleware')
 const User = require('../api/user/user.model')
+const UserController = require('../api/user/user.controller')
 
 const validateJwt = expressJwt({
     secret: config.secrets.session
@@ -27,22 +28,32 @@ const validateJwt = expressJwt({
  */
 module.exports.isAuthenticated = () => {
     return compose()
-        .use(function(req, res, next) {
+        .use(function (req, res, next) {
             // allow access_token to be passed through query parameter as well
-            if(req.query && req.query.hasOwnProperty('access_token')) {
+            if (req.query && req.query.hasOwnProperty('access_token')) {
                 req.headers.authorization = `Bearer ${req.query.access_token}`;
             }
             // IE11 forgets to set Authorization header sometimes. Pull from cookie instead.
-            if(req.query && typeof req.headers.authorization === 'undefined') {
+            if (req.query && typeof req.headers.authorization === 'undefined') {
                 req.headers.authorization = `Bearer ${req.cookies.token}`;
             }
-            validateJwt(req, res, next);
+            //验证是否服务端生成的token
+            var token = req.headers.authorization.split('Bearer ')[1]
+            UserController.findByToken(token).then((user) => {
+                if (user) {
+                    //验证token是否过期
+                    validateJwt(req, res, next);
+                }else{
+                    return res.status(401).end();
+                }
+            })
+
         })
         // Attach user to request
-        .use(function(req, res, next) {
+        .use(function (req, res, next) {
             User.findById(req.user._id).exec()
                 .then(user => {
-                    if(!user) {
+                    if (!user) {
                         return res.status(401).end();
                     }
                     req.user = user;
@@ -53,14 +64,14 @@ module.exports.isAuthenticated = () => {
 }
 
 module.exports.hasRole = (roleRequired) => {
-    if(!roleRequired) {
+    if (!roleRequired) {
         throw new Error('必须输入身份名称');
     }
 
     return compose()
         .use(this.isAuthenticated())
         .use(function meetsRequirements(req, res, next) {
-            if(config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
+            if (config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
                 return next();
             } else {
                 return res.status(403).send('没有访问权限');
@@ -75,7 +86,7 @@ module.exports.hasRole = (roleRequired) => {
  * @returns {*} JWT TOKEN
  */
 module.exports.signToken = (id, role) => {
-    return jwt.sign({ _id: id, role}, config.secrets.session, {
-        expiresIn: 60*60*5
+    return jwt.sign({_id: id, role}, config.secrets.session, {
+        expiresIn: 60 * 60 * 5
     })
 }

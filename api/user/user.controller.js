@@ -33,6 +33,10 @@ module.exports.index = (req, res) => {
         .catch(handleError(res));
 }
 
+module.exports.findByToken = (token) =>{
+    return User.findOne({ token: token }).exec()
+}
+
 /**
  * 创建用户
  * @param req
@@ -47,6 +51,8 @@ module.exports.create = (req, res) => {
             let token = jwt.sign({_id: user._id}, config.secrets.session, {
                 expiresIn: 60 * 60 *5
             })
+            user.token = token
+            User.findOneAndUpdate({_id: user._id}, user).exec()
             res.json({ token })
         })
         .catch(validationError(res))
@@ -106,6 +112,7 @@ module.exports.changePassword = (req, res) => {
         })
 }
 
+
 /**
  * 用户登陆
  * @param req
@@ -115,12 +122,15 @@ module.exports.changePassword = (req, res) => {
 module.exports.login = (req, res) => {
     var loginId = req.body.loginId
     var password = req.body.password
+    let token
     return User.findOne({loginId: loginId}).exec()
         .then(user => {
             if(user&&user.authenticate(password)) {
-                let token = jwt.sign({_id: user._id}, config.secrets.session, {
+                token = jwt.sign({_id: user._id}, config.secrets.session, {
                     expiresIn: 60 * 60 *5
                 })
+                user.token = token
+                User.findOneAndUpdate({_id: user._id}, user).exec()
                 res.status(200).json({token}).end()
             }else{
                 return res.status(401).end()

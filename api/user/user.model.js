@@ -18,32 +18,10 @@ var UserSchema = new mongoose.Schema({
         required: true
     },
     provider: String,
-    salt: String
+    salt: String,
+    token: String
 });
 
-/**
- * Virtuals
- */
-
-// Public profile information
-UserSchema
-    .virtual('profile')
-    .get(() => {
-        return {
-            name: this.name,
-            role: this.role
-        };
-    });
-
-// Non-sensitive info we'll be putting in the token
-UserSchema
-    .virtual('token')
-    .get(() => {
-        return {
-            _id: this._id,
-            role: this.role
-        };
-    });
 
 /**
  * Validations

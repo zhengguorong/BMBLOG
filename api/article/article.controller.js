@@ -75,7 +75,7 @@ module.exports.create = (req, res) => {
 }
 
 // Upserts the given Article in the DB at the specified ID
-module.exports.upsert = (req, res) => {
+module.exports.update = (req, res) => {
     if(req.body._id) {
         delete req.body._id
     }
