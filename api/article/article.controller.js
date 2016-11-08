@@ -69,6 +69,8 @@ module.exports.show = (req, res) => {
 
 // Creates a new Article in the DB
 module.exports.create = (req, res) => {
+    //添加作者信息
+    req.body.author = req.user.name || '匿名'
     return Article.create(req.body)
         .then(respondWithResult(res, 201))
         .catch(handleError(res))
@@ -80,7 +82,6 @@ module.exports.update = (req, res) => {
         delete req.body._id
     }
     return Article.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
-
         .then(respondWithResult(res))
         .catch(handleError(res))
 }

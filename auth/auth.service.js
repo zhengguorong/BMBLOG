@@ -33,6 +33,9 @@ module.exports.isAuthenticated = () => {
             if (req.query && req.query.hasOwnProperty('access_token')) {
                 req.headers.authorization = `Bearer ${req.query.access_token}`;
             }
+            if(req.body && req.body.hasOwnProperty('access_token')) {
+                req.headers.authorization = `Bearer ${req.body.access_token}`;
+            }
             // IE11 forgets to set Authorization header sometimes. Pull from cookie instead.
             if (req.query && typeof req.headers.authorization === 'undefined') {
                 req.headers.authorization = `Bearer ${req.cookies.token}`;
