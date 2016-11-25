@@ -1,0 +1,212 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: "microsoft yahei";
+}
+
+@font-face {
+    font-family: Cocogoose;
+    src: url('../font/Cocogoose.otf');
+}
+.container {
+    position: absolute;
+}
+.swiper-container {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+}
+
+.swiper-slide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url("../images/Loading-BG.png") no-repeat center;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+}
+img {
+    display: block;
+    width: 100%;
+}
+
+@-webkit-keyframes tipmove {
+    0% {
+        bottom: 10px;
+        opacity: 0
+    }
+    50% {
+        bottom: 15px;
+        opacity: 1
+    }
+    100% {
+        bottom: 20px;
+        opacity: 0
+    }
+}
+
+.ani {
+    position: absolute;
+}
+
+.txt {
+    position: absolute;
+}
+
+#array {
+    position: absolute;
+    z-index: 999;
+    -webkit-animation: tipmove 1.5s infinite ease-in-out;
+}
+
+.maka-Arrow {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    margin-left: -20px;
+    width: 40px;
+    text-align: center;
+    display: none;
+    z-index: 999;
+    animation-name: arrowing;
+    -webkit-animation-name: arrowing;
+    animation-duration: 1.5s;
+    -webkit-animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+}
+
+.maka-Arrow img {
+    width: 40px;
+}
+
+.btn-buy {
+    -webkit-animation: arrowing 1s linear infinite;
+    -o-animation: arrowing 1s linear infinite;
+    animation: arrowing 1s linear infinite;
+}
+
+@keyframes arrowing {
+    0% {
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
+        opacity: .8;
+    }
+    50% {
+        -webkit-transform: translateY(10px);
+        transform: translateY(10px);
+        opacity: 1;
+    }
+    to {
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px)
+    }
+}
+
+@-webkit-keyframes arrowing {
+    0%, to {
+        -webkit-transform: translateY(-5px);
+        opacity: .8
+    }
+    50% {
+        -webkit-transform: translateY(10px);
+        opacity: 1
+    }
+    to {
+        -webkit-transform: translateY(-5px);
+        opacity: .8
+    }
+}
+
+.column-loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url("../images/Loading-BG.png") no-repeat center;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+    z-index: 2;
+}
+.column-loading .loading {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 180px;
+    height: 180px;
+    margin: auto;
+    line-height: 180px;
+    text-align: center;
+    font-size: 32px;
+    color: #5cc1f7;
+    font-family: "SimSun";
+}
+.column-loading .loading.circle {
+    background: url("../images/circle.png") no-repeat center;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+    -webkit-animation: circleLoading 1s linear infinite;
+    -o-animation: circleLoading 1s linear infinite;
+    animation: circleLoading 1s linear infinite;
+}
+
+@keyframes circleLoading {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    25% {
+        -webkit-transform: rotate(120deg);
+        -moz-transform: rotate(120deg);
+        -ms-transform: rotate(120deg);
+        -o-transform: rotate(120deg);
+        transform: rotate(120deg);
+    }
+    50% {
+        -webkit-transform: rotate(240deg);
+        -moz-transform: rotate(240deg);
+        -ms-transform: rotate(240deg);
+        -o-transform: rotate(240deg);
+        transform: rotate(240deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+.resize {
+    position: absolute;
+}
+.scrn-wash {
+    background-image: url("../images/Loading-BG.png");
+}
+.scrn-wash .container-text {
+    top: 0;
+    width: 100%;
+    height: 312px;
+    background: url("../images/text-1.png") no-repeat center;
+    -webkit-background-size: auto 100%;
+    background-size: auto 100%;
+}
+.scrn-close {
+    background-image: url("../images/Scrn2-BG3.png");
+}
+.scrn-buy {
+    background-image: url("../images/Scrn3-BG.png");
+}
