@@ -10,7 +10,7 @@ var PageSchema = new mongoose.Schema({
         required: true
     },
     html: String,
-    createDate: { type: Date, default: Date.now },
+    createDate: { type: Number, default: new Date().getTime() },
     loginId: String,
 })
 

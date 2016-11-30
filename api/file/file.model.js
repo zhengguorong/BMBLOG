@@ -10,7 +10,7 @@ var FileSchema = new mongoose.Schema({
         required: true
     },
     fileName: String,
-    createDate: { type: Date, default: Date.now },
+    createDate: { type: Number, default: new Date().getTime() },
     themeId: {
         type: String
     }
