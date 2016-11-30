@@ -22,7 +22,6 @@
     "mongoose": "^4.6.5",
     "morgan": "~1.7.0",
     "node-uuid": "^1.4.7",
-    "path": "^0.12.7",
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
