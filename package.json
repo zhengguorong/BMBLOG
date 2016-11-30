@@ -18,8 +18,11 @@
     "hbs": "~4.0.1",
     "jsonwebtoken": "^7.1.9",
     "less-middleware": "~2.2.0",
+    "mkdirp": "^0.5.1",
     "mongoose": "^4.6.5",
     "morgan": "~1.7.0",
+    "node-uuid": "^1.4.7",
+    "path": "^0.12.7",
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
