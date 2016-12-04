@@ -12,7 +12,7 @@ var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
-var template = require('art-template');
+var ejs = require('ejs')
 var config = require('./config')
 mongoose.Promise = require('bluebird')
 
@@ -28,10 +28,9 @@ var app = express()
 // app.set('views', path.join(__dirname, 'views'))
 // app.set('view engine', 'hbs'
 
-template.config('base', __dirname + '/views/');
-template.config('extname', '.html');
-app.engine('.html', template.__express);
+app.engine('.html', ejs.__express);
 app.set('view engine', 'html');
+app.set('views', path.join(__dirname, 'views'))
 
 
 // uncomment after placing your favicon in /public

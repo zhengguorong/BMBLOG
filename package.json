@@ -12,6 +12,7 @@
     "composable-middleware": "^0.3.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
+    "ejs": "^2.5.3",
     "express": "~4.14.0",
     "express-jwt": "^5.1.0",
     "fast-json-patch": "^1.1.1",

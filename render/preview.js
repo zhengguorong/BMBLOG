@@ -1,6 +1,5 @@
 var Pages = require('../api/pages/pages.model')
 var pageController = require('../controller/pages.controller')
-var template = require('art-template')
 var error = require('./error')
 
 const render = (req, res) => {
@@ -8,8 +7,7 @@ const render = (req, res) => {
     if (id) {
         pageController.findById(id)
         .then(function (entity) {
-            let html = template('template', entity);
-            res.send(html)
+            res.render('template', entity);
         })
         .catch ((err) => {
             error(req, res, {message: '找不到数据', error: err})
