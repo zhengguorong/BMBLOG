@@ -1,6 +1,5 @@
 var Pages = require('../api/pages/pages.model')
 var pageController = require('../controller/pages.controller')
-var error = require('./error')
 
 const render = (req, res) => {
     const id = req.query.id
@@ -10,10 +9,10 @@ const render = (req, res) => {
             res.render('template', entity);
         })
         .catch ((err) => {
-            error(req, res, {message: '找不到数据', error: err})
+            res.render('error',{message: '找不到数据', error: err})
         })
     }else {
-        error(req, res, {message: '请加入查询ID', error: {}})
+        res.render('error',{message: '请加入查询ID', error: {}})
     }
 
 }
