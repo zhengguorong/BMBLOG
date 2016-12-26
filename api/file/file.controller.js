@@ -70,6 +70,13 @@ module.exports.show = (req, res) => {
         .catch(handleError(res))
 }
 
+module.exports.getByThemeId = (req, res) => {
+    return File.find({themeId:req.params.id}).exec()
+        .then(handleEntityNotFound(res))
+        .then(respondWithResult(res))
+        .catch(handleError(res))
+}
+
 // Creates a new File in the DB
 module.exports.create = (req, res) => {
     var imageInfo = buildImgPath(req.body.themeId || 'all')
