@@ -12,7 +12,7 @@ module.exports = function(app){
         .get(errors[404]);
 
     // 前端页面渲染路由
-    app.route('/perview').get(require('./render/preview'))
+    app.route('/perview/:id').get(require('./render/preview'))
 
     // 其他资源路由
     app.route('/*')

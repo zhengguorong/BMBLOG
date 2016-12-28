@@ -2,7 +2,8 @@ var Pages = require('../api/pages/pages.model')
 var pageController = require('../controller/pages.controller')
 
 const render = (req, res) => {
-    const id = req.query.id
+    const id = req.params.id
+    console.log(id)
     if (id) {
         pageController.findById(id)
         .then(function (entity) {
