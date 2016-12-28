@@ -9,6 +9,8 @@ var FileSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    width: Number,
+    height: Number,
     fileName: String,
     createDate: { type: Number, default: new Date().getTime() },
     themeId: {
