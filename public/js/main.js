@@ -1,48 +1,51 @@
-var mySwiper = new Swiper('.swiper-container', {
-    direction: 'vertical',
-    pagination: '.swiper-pagination',
-    mousewheelControl: true,
-    onInit: function (swiper) {
-        //swiperAnimateCache(swiper);
-        swiperAnimate(swiper);
-    },
-    onSlideChangeEnd: function (swiper) {
-        swiperAnimate(swiper);
-    }
+var swiper = new Swiper('.swiper-container', {
+  direction: 'vertical',
+  mousewheelControl: true,
+  nextButton:'.button-next',
+  onInit: function (swiper) {
+    swiperAnimate(swiper);
+  },
+  onSlideChangeEnd: function (swiper) {
+    swiperAnimate(swiper);
+  },
 })
 
-//获取页面上所有img资源路径
-var imgs = document.getElementsByTagName('img')
-var resources = []
-var processImgs = []
-for(var i=0;i<imgs.length;i++){
-    var imgSrc = imgs[i].getAttribute('pre-src')
-    //过滤没有pre-src属性的img标签
-    if(imgSrc){
-        resources.push(imgSrc)
-        processImgs.push(imgs[i])
+var loader = (function () {
+  var loadingContainer = document.getElementById('loadingCont')
+  var loadingTxt = document.getElementById('loadingTxt')
+  var loadingCircle = document.getElementById('loadingCircle')
+  var loadingCircleP = loadingCircle.getAttribute('stroke-dasharray')
+  var imgs = document.getElementsByTagName('img')
+  var srcList = []
+  var imgList = []
+  var imgSrc, i
+  for (i = 0; i < imgs.length; i++) {
+    imgSrc = imgs[i].getAttribute('pre-src')
+    if (imgSrc) {
+      srcList.push(imgSrc)
+      imgList.push(imgs[i])
     }
-}
-
-
-var loader = new resLoader({
-    resources : resources,
-    onStart : function(total){
-        console.log('start:'+total);
+  }
+  return new resLoader({
+    resources: srcList,
+    onStart: function (total) {
+      console.log('start:' + total)
     },
-    onProgress : function(current, total){
-        console.log(current+'/'+total);
-        var percent = (current/total*100).toFixed(0);
-        document.querySelector('.progress').innerHTML = percent + '%';
+    onProgress: function (current, total) {
+      console.log(current + '/' + total)
+      var p = current / total
+      loadingTxt.textContent = Math.round(p * 100) + '%'
+      loadingCircle.style.strokeDashoffset = (1 - p) * loadingCircleP
     },
-    onComplete : function(total){
-        console.log('加载完毕:'+total+'个资源');
-        //重新设置src
-        for(var i=0;i<processImgs.length;i++){
-            processImgs[i].setAttribute('src',resources[i])
-        }
-        document.querySelector('.column-loading').style.display = "none";
+    onComplete: function (total) {
+      console.log('加载完毕:' + total + '个资源')
+      for (i = 0; i < imgList.length; i++) {
+        imgList[i].setAttribute('src', srcList[i])
+      }
+      swiper.container[0].style.opacity = 1
+      loadingContainer.style.opacity = 0
+      swiperAnimate(swiper)
     }
-});
-
-loader.start();
+  })
+})()
+loader.start()
