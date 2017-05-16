@@ -13,14 +13,14 @@ const jwt = require('jsonwebtoken')
  */
 const validationError = (res, statusCode) => {
     statusCode = statusCode || 422;
-    return function(err) {
+    return function (err) {
         return res.status(statusCode).json(err);
     };
 }
 
 const handleError = (res, statusCode) => {
     statusCode = statusCode || 500;
-    return function(err) {
+    return function (err) {
         return res.status(statusCode).send(err);
     };
 }
@@ -33,7 +33,7 @@ module.exports.index = (req, res) => {
         .catch(handleError(res));
 }
 
-module.exports.findByToken = (token) =>{
+module.exports.findByToken = (token) => {
     return User.findOne({ token: token }).exec()
 }
 
@@ -48,11 +48,13 @@ module.exports.create = (req, res) => {
     newUser.role = 'user'
     newUser.save()
         .then((user) => {
-            let token = jwt.sign({_id: user._id}, config.secrets.session, {
-                expiresIn: 60 * 60 *5
+            let token = jwt.sign({ _id: user._id }, config.secrets.session, {
+                expiresIn: 60 * 60 * 5
             })
             user.token = token
-            User.findOneAndUpdate({_id: user._id}, user).exec()
+            var updateUser = JSON.parse(JSON.stringify(user))
+            delete updateUser._id
+            User.findOneAndUpdate({ _id: user._id }, updateUser).exec()
             res.json({ token })
         })
         .catch(validationError(res))
@@ -65,7 +67,7 @@ module.exports.show = (req, res, next) => {
     let userId = req.params.id
     return User.findById(userId).exec()
         .then(user => {
-            if(!user) {
+            if (!user) {
                 return res.status(400).end()
             }
             res.json(user.profile)
@@ -99,14 +101,14 @@ module.exports.changePassword = (req, res) => {
     var newPass = String(req.body.newPassword)
     return User.findById(uesrId).exec()
         .then(user => {
-            if(user.authenticate(oldPass)) {
+            if (user.authenticate(oldPass)) {
                 user.password = newPass
                 return user.save()
-                    .then(()=>{
+                    .then(() => {
                         res.status(204).end()
                     })
                     .catch(validationError(res))
-            }else{
+            } else {
                 return res.status(403).end()
             }
         })
@@ -123,16 +125,18 @@ module.exports.login = (req, res) => {
     var loginId = req.body.loginId
     var password = req.body.password
     let token
-    return User.findOne({loginId: loginId}).exec()
+    return User.findOne({ loginId: loginId }).exec()
         .then(user => {
-            if(user&&user.authenticate(password)) {
-                token = jwt.sign({_id: user._id}, config.secrets.session, {
-                    expiresIn: 60 * 60 *5
+            if (user && user.authenticate(password)) {
+                token = jwt.sign({ _id: user._id }, config.secrets.session, {
+                    expiresIn: 60 * 60 * 5
                 })
                 user.token = token
-                User.findOneAndUpdate({_id: user._id}, user).exec()
-                res.status(200).json({token}).end()
-            }else{
+                var updateUser = JSON.parse(JSON.stringify(user))
+                delete updateUser._id
+                User.findOneAndUpdate({ _id: user._id }, updateUser).exec()
+                res.status(200).json({ token }).end()
+            } else {
                 return res.status(401).end()
             }
         })
@@ -149,7 +153,7 @@ module.exports.me = (req, res, next) => {
     var userId = req.user._id
     return User.findOne({ _id: userId }, '-salt -password').exec()
         .then(user => { // don't ever give out the password or salt
-            if(!user) {
+            if (!user) {
                 return res.status(401).end();
             }
             res.json(user);
