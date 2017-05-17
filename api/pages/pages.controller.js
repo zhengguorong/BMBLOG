@@ -3,6 +3,7 @@
  */
 var jsonpatch =  require('fast-json-patch')
 var Pages = require('./pages.model')
+var tools = require('../../util/tools')
 
 const respondWithResult = (res, statusCode) => {
     statusCode = statusCode || 200
@@ -89,10 +90,14 @@ module.exports.update = (req, res) => {
     if(req.body._id) {
         delete req.body._id
     }
+    tools.renderFile('template.html', req.body, (html) => {
+        tools.saveFile(req.params.id + '.html', html)
+    })
     return Pages.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
         .then(respondWithResult(res))
         .catch(handleError(res))
 }
+
 
 // Updates an existing Pages in the DB
 module.exports.patch = (req, res) => {
