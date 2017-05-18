@@ -9,6 +9,8 @@ var PageSchema = new mongoose.Schema({
         type: Array,
         required: true
     },
+    title: String,
+    description: String,
     html: String,
     createDate: { type: Number, default: new Date().getTime() },
     loginId: String,

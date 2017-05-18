@@ -1,12 +1,5 @@
-const all = {
-    port: 9000,
-    ip: process.env.ip || '0.0.0.0',
-    secrets: {
-        session: 'BMBLOG'
-    },
-    mongo: {
-        uri: 'mongodb://localhost:27017/bmblog'
-    },
-    userRoles: ['guest', 'user', 'admin']
+if (process.env.NODE_ENV === 'production') {
+    module.exports = require('./index.pro.js')
+} else if(process.env.NODE_ENV === 'development') {
+    module.exports = require('./index.dev.js')
 }
-module.exports = all

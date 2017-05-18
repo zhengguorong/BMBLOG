@@ -16,8 +16,8 @@ var ejs = require('ejs')
 var config = require('./config')
 mongoose.Promise = require('bluebird')
 
-
-mongoose.connect(config.mongo.uri)
+console.log(config)
+mongoose.connect(config.mongo.uri,{user:'h5maker',pass:'xgd$MPB37@8GALX#'})
 mongoose.connection.on('error', function(err) {
   console.error(`MongoDB connection error: ${err}`)
   process.exit(-1);

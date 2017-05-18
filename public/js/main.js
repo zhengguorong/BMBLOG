@@ -26,6 +26,11 @@ var loader = (function () {
       imgList.push(imgs[i])
     }
   }
+  if (srcList.length === 0) {
+      swiper.container[0].style.opacity = 1
+      loadingContainer.style.opacity = 0
+      swiperAnimate(swiper)
+  }
   return new resLoader({
     resources: srcList,
     onStart: function (total) {
