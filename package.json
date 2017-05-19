@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "dev": "NODE_ENV=development node ./bin/www"
+    "dev": "NODE_ENV=development node ./bin/www",
+    "local": "NODE_ENV=localhost node ./bin/www"
   },
   "dependencies": {
     "art-template": "^3.0.3",
