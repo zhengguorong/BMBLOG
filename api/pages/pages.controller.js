@@ -1,14 +1,14 @@
 /**
  * Created by zhengguorong on 16/11/4.
  */
-var jsonpatch =  require('fast-json-patch')
+var jsonpatch = require('fast-json-patch')
 var Pages = require('./pages.model')
 var tools = require('../../util/tools')
 
 const respondWithResult = (res, statusCode) => {
     statusCode = statusCode || 200
-    return function(entity) {
-        if(entity) {
+    return function (entity) {
+        if (entity) {
             return res.status(statusCode).json(entity)
         }
         return null
@@ -16,10 +16,10 @@ const respondWithResult = (res, statusCode) => {
 }
 
 const patchUpdates = (patches) => {
-    return function(entity) {
+    return function (entity) {
         try {
             jsonpatch.apply(entity, patches, /*validate*/ true)
-        } catch(err) {
+        } catch (err) {
             return Promise.reject(err)
         }
 
@@ -28,8 +28,8 @@ const patchUpdates = (patches) => {
 }
 
 const removeEntity = (res) => {
-    return function(entity) {
-        if(entity) {
+    return function (entity) {
+        if (entity) {
             return entity.remove()
                 .then(() => {
                     res.status(204).end()
@@ -39,8 +39,8 @@ const removeEntity = (res) => {
 }
 
 const handleEntityNotFound = (res) => {
-    return function(entity) {
-        if(!entity) {
+    return function (entity) {
+        if (!entity) {
             res.status(404).end()
             return null
         }
@@ -50,20 +50,21 @@ const handleEntityNotFound = (res) => {
 
 const handleError = (res, statusCode) => {
     statusCode = statusCode || 500
-    return function(err) {
+    return function (err) {
         res.status(statusCode).send(err)
     }
 }
 
-module.exports.index = (req,res) => {
+module.exports.index = (req, res) => {
     return Pages.find().exec()
         .then(respondWithResult(res))
         .catch(handleError(res))
 }
 
-module.exports.findByLoginId = (req,res) => {
-    var loginId =  req.user.loginId
-    return Pages.find({loginId: loginId}).exec()
+module.exports.findByLoginId = (req, res) => {
+    var loginId = req.user.loginId
+    var type = req.query.type;
+    return Pages.find({ loginId: loginId, type: type }).exec()
         .then(respondWithResult(res))
         .catch(handleError(res))
 }
@@ -87,13 +88,20 @@ module.exports.create = (req, res) => {
 
 // Upserts the given Pages in the DB at the specified ID
 module.exports.update = (req, res) => {
-    if(req.body._id) {
+    if (req.body._id) {
         delete req.body._id
     }
-    tools.renderFile('template.html', req.body, (html) => {
-        tools.saveFile(req.params.id + '.html', html)
-    })
-    return Pages.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
+    if (req.body.type === 'h5') {
+        tools.renderFile('template.html', req.body, (html) => {
+            tools.saveFile(req.params.id + '.html', html)
+        })
+    } else if (req.body.type === 'spa') {
+        tools.renderFile('spa.html', req.body, (html) => {
+            tools.saveFile(req.params.id + '.html', html)
+        })
+    }
+
+    return Pages.findOneAndUpdate({ _id: req.params.id }, req.body, { upsert: true, setDefaultsOnInsert: true, runValidators: true }).exec()
         .then(respondWithResult(res))
         .catch(handleError(res))
 }
@@ -101,7 +109,7 @@ module.exports.update = (req, res) => {
 
 // Updates an existing Pages in the DB
 module.exports.patch = (req, res) => {
-    if(req.body._id) {
+    if (req.body._id) {
         delete req.body._id
     }
     return Pages.findById(req.params.id).exec()
